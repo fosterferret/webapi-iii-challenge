@@ -7,11 +7,28 @@ router.post("/", (req, res) => {
   Users.insert(req.body)
     .then(user => res.status(201).json(user))
     .catch(err => {
-      res.status(500).json({ message: "Error adding the user" });
+      res
+        .status(500)
+        .json({ error: "we encountered an arror while adding the user" });
     });
 });
 
-router.post("/:id/posts", (req, res) => {});
+router.post("/:id/posts", (req, res) => {
+  const { id } = req.params;
+  const postDetails = { ...req.body, user_id: id };
+  Posts.insert(postDetails)
+    .then(post => {
+      res.status(210).json(post);
+    })
+    .catch(err => {
+      res
+        .status(500)
+        .json({
+          error:
+            "we encountered an error while creating this post for the user"
+        });
+    });
+});
 
 router.get("/", (req, res) => {});
 
