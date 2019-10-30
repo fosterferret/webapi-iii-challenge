@@ -57,12 +57,10 @@ router.get("/:id/posts", validateUserId, (req, res) => {
       res.status(200).json(posts);
     })
     .catch(err => {
-      res
-        .status(500)
-        .json({
-          message:
-            "encountered an error while retrieving the posts for the specified user"
-        });
+      res.status(500).json({
+        message:
+          "encountered an error while retrieving the posts for the specified user"
+      });
     });
 });
 
@@ -72,15 +70,33 @@ router.delete("/:id", validateUserId, (req, res) => {
       if (data) {
         res.status(200).json({ message: "The user has been deleted" });
       } else {
-        res.status(404).json({ message: "The user could not be found on our database" });
+        res
+          .status(404)
+          .json({ message: "The user could not be found on our database" });
       }
     })
     .catch(err => {
-      res.status(500).json({ message: "encountered an error while removing the user" });
+      res
+        .status(500)
+        .json({ message: "encountered an error while removing the user" });
     });
 });
 
-router.put("/:id", (req, res) => {});
+router.put("/:id", (req, res) => {
+  Users.update(req.params.id, req.body)
+    .then(user => {
+      if (user) {
+        res.status(200).json(user);
+      } else {
+        res.status(404).json({ message: "The user could not be found" });
+      }
+    })
+    .catch(err => {
+      res.status(500).json({
+        message: "error while updating the user"
+      });
+    });
+});
 
 //custom middleware
 
