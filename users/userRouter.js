@@ -35,7 +35,7 @@ router.get("/", (req, res) => {
     });
 });
 
-router.get("/:id", (req, res) => {
+router.get("/:id", validateUserId, (req, res) => {
   Users.getById(req.params.id)
     .then(user => {
       if (user) {
@@ -51,7 +51,15 @@ router.get("/:id", (req, res) => {
     });
 });
 
-router.get("/:id/posts", (req, res) => {});
+router.get("/:id/posts", validateUserId, (req, res) => {
+  Users.getUserPosts(req.params.id)
+    .then(posts => {
+      res.status(200).json(posts);
+    })
+    .catch(err => {
+      res.status(500).json({ message: "encountered an error while retrieving the posts for the specified user" });
+    });
+});
 
 router.delete("/:id", (req, res) => {});
 
